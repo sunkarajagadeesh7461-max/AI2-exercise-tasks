@@ -1,3 +1,4 @@
 Jagadeesh Sunkara - M.Sc. Digital Farming, HSWT
 Curious to learn AI 2 and computer vision
 Favorite programming language: Python
+Edited from the Github
