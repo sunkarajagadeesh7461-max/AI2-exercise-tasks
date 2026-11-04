@@ -31,7 +31,13 @@ SAMPLE_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "exe
 #      and std=[0.229, 0.224, 0.225]
 #
 # Store the result in a variable called 'transform'.
-transform = None
+
+transform = transforms.Compose([
+    transforms.Resize((32, 32)),
+    transforms.ToTensor(),
+    transforms.Normalize(mean=[0.485, 0.456, 0.406],
+                         std=[0.229, 0.224, 0.225]),
+])
 
 
 # ===========================================================================
@@ -52,23 +58,39 @@ class SimpleImageDataset(Dataset):
         #   Step 1: Create a mapping from class name to integer index.
         #           e.g. {"class_a": 0, "class_b": 1} (Hint: Use .enumerate() to get the index)
         #           Store as self.class_to_idx.
-        self.class_to_idx = None
+        self.class_to_idx = {}
+        for i, cls in enumerate(self.classes):
+            self.class_to_idx[cls] = i
+
+
         #   Step 2: Build a list of (file_path, label) tuples.
         #           Loop over each class folder, then over each file inside it.
         #           Store the full path and the integer label.
         #           Store as self.samples.
-        self.samples = None
+        self.samples = []                                # empty inventory sheet
+        for cls in self.classes:                         # drawer by drawer: apple, basil, cabbage
+            label = self.class_to_idx[cls]               # look up the sticker (apple → 0)
+            cls_dir = os.path.join(self.root_dir, cls)   # full address of the drawer
+            for fname in sorted(os.listdir(cls_dir)):    # photo by photo inside the drawer
+                path = os.path.join(cls_dir, fname)      # full address of the photo
+                if os.path.isfile(path):                 # only real files
+                    self.samples.append((path, label))   # write one row: (address, sticker)
 
     def __len__(self):
         #   Return the total number of samples.
-        pass
+        return len(self.samples)
 
     def __getitem__(self, idx):
         #   Step 1: Get the file path and label from self.samples[idx].
         #   Step 2: Open the image with PIL and convert to "RGB".
         #   Step 3: Apply self.transform if it is not None.
         #   Step 4: Return (image, label).
-        pass
+
+        img_path, label = self.samples[idx]           # read row number idx
+        image = Image.open(img_path).convert("RGB")   # open the photo, force 3 colours
+        if self.transform is not None:                # if a washing machine was given...
+            image = self.transform(image)             # ...wash the photo
+        return image, label                           # hand back (photo, sticker) 
 
 if __name__ == "__main__":
     # ===========================================================================
