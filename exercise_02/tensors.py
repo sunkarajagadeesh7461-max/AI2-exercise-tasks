@@ -18,6 +18,11 @@ import torch
 # Hint: torch.randn() creates a tensor with random values from a
 # normal distribution. Pass the dimensions as arguments.
 
+x = torch.randn(2,3,224,224)
+
+print("shape :", x.shape)
+print("dtype:", x.dtype)
+print("device:", x.device)
 
 # ===========================================================================
 # Task 2: Device Transfer
@@ -29,6 +34,9 @@ import torch
 # Step 2: Move the tensor using .to('cuda').
 # Step 3: Print the .device attribute to confirm.
 
+if torch.cuda.is_available():
+    x_gpu = x.to("cuda")
+    print("after:", x_gpu.device)
 
 # ===========================================================================
 # Task 3: Indexing and Slicing
@@ -42,7 +50,12 @@ import torch
 # Step 2: Extract only the green channel (index 1) of that image.
 #         Print its shape — should be (32, 32).
 
+y = torch.randn(8,3,32,32)
+img5 = y[4]
+print("image:", img5.shape)
 
+green = img5[1]
+print("green:", green.shape)
 # ===========================================================================
 # Task 4: Permute — HWC to CHW
 # ===========================================================================
@@ -53,7 +66,10 @@ import torch
 #         You need to reorder dimensions: dim 2 → 0, dim 0 → 1, dim 1 → 2.
 # Step 2: Print both shapes to confirm (64, 64, 3) → (3, 64, 64).
 
-
+z = torch.randn(64,64,3)
+print("HWC:", z.shape)
+z_chw = z.permute(2, 0, 1 )
+print("CHW:", z_chw.shape)
 # ===========================================================================
 # Task 5: Squeeze and Unsqueeze
 # ===========================================================================
@@ -67,6 +83,11 @@ import torch
 # This pattern is common: models expect batched input [B, C, H, W],
 # so a single image needs unsqueeze before passing through.
 
+a = torch.randn(3,128,128)
+unseq = a.unsqueeze(0)
+print("unsqueeze:", unseq.shape)
+seq = a.squeeze()
+print("squeeze:", seq.shape)
 
 # ===========================================================================
 # Task 6: Reshaping — Flatten
@@ -80,6 +101,10 @@ import torch
 # Use .view() or .reshape(). The batch dimension (4) stays, everything
 # else gets flattened into one dimension. You can pass -1 to let
 # PyTorch infer the flattened size automatically.
+b = torch.randn(4,16,8,8)
+fla = b.reshape(4,-1)
+print("flattened:", fla)
+
 
 
 # ===========================================================================
@@ -93,3 +118,16 @@ import torch
 #    Compute the mean pixel value across the batch dimension (dim=0).
 #    Print the resulting shape — should be (3, 32, 32).
 #    This is how dataset mean is computed for normalization.
+
+c = torch.randn(3,3)
+d = torch.randn(3,3)
+op_1 = c * d
+op_2 = c @ d
+print("With *:", op_1.shape)
+print("With_@:", op_2.shape)
+print("element-wise:\n", op_1)
+print("matrix:\n", op_2)
+
+e = torch.randn(4,3,32,32)
+m = e.mean(dim=0)
+print("shape:", m.shape)
