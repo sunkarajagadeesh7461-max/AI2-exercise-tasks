@@ -21,6 +21,10 @@ import torch
 #
 # Step 4: Print x.grad (use .item()) — this holds the computed gradient.
 
+x = torch.tensor(4.0, requires_grad=True)
+y = 3 * x**3 - 2 * x**2 + x
+y.backward()
+print(x.grad.item())
 
 # ===========================================================================
 # Task 2: Manual Gradient Verification
@@ -43,7 +47,7 @@ import torch
 # Step 3: Compare your manual result with x.grad from Task 1.
 #         Do they match?
 #
-# Answer:
+# Answer:129
 
 
 # ===========================================================================
@@ -53,8 +57,8 @@ import torch
 #
 # Step 1: Derive df/dx on paper. Write as a comment.
 #
-# df/dx = ???
-# df/dx at x = 2.0 = ???
+# df/dx = 10x - 4 = 6
+# df/dx at x = 2.0 = 16
 #
 # Step 2: Create a new tensor x2 with value 2.0 and requires_grad=True.
 #         Compute f(x2), call .backward(), and print the gradient.
@@ -62,18 +66,25 @@ import torch
 #
 # Important: Each tensor can only have .backward() called once.
 # You need a fresh tensor for this task, not the one from Task 1.
-x2 = None
 
+x2 = torch.tensor(2.0, requires_grad=True)
+y2 = 5 * x2**2 - 4 * x2 + 7 
+
+y2.backward()
+print(x2.grad.item())
 
 # ===========================================================================
 # Task 4: torch.no_grad()
 # ===========================================================================
 # Step 1: Create a tensor x3 with value 5.0 and requires_grad=True.
-x3 = None
+x3 = torch.tensor(5.0, requires_grad=True)
 
 # Step 2: Inside a "with torch.no_grad():" block, compute y_no_grad = x3 * 2.
 #         Print y_no_grad.requires_grad — should be False.
-y_no_grad = None
+
+with torch.no_grad():
+    y_no_grad = x3 * 2
+print(y_no_grad.requires_grad)
 
 # Step 3: Outside the block, compute z_with_grad = x3 * 2.
 #         Print z_with_grad.requires_grad — should be True.
@@ -81,7 +92,11 @@ y_no_grad = None
 # This demonstrates how no_grad() prevents gradient tracking.
 # You will use this during model evaluation in later exercises
 # to save memory and computation.
-z_with_grad = None
+
+z_with_grad = x3 * 2
+print(z_with_grad.requires_grad)
+
+
 
 
 # ===========================================================================
