@@ -98,25 +98,37 @@ if __name__ == "__main__":
     # ===========================================================================
     # Step 1: Instantiate SimpleImageDataset with SAMPLE_DIR
     #         and the transform from Task 1.
-    dataset = None
-    dataloader = None
+
+    dataset = SimpleImageDataset(SAMPLE_DIR, transform=transform)
+    dataloader = DataLoader(dataset, batch_size=2, shuffle=True, num_workers=0)
     #
     # Step 2: Print len(dataset) and dataset.classes.
+
+    print("Task 3:")
+    print(f"  Total samples: {len(dataset)}")
+    print(f"  Classes: {dataset.classes}")
     #
     # Step 3: Create a DataLoader with batch_size=2, shuffle=True, num_workers=0.
-    #
+    images, labels = next(iter(dataloader))
     # Step 4: Fetch one batch using next(iter(dataloader)).
     #         Print the image tensor shape and the labels.
-    
+
+    print(f"  Batch image shape: {images.shape}")
+    print(f"  Batch labels: {labels}")
     
     # ===========================================================================
     # Task 4: Inspect a Single Sample
     # ===========================================================================
     # Step 1: Access the first sample directly: image, label = dataset[0]
+    image, label = dataset[0]
     #
     # Step 2: Print the image tensor shape, its min and max pixel values,
     #         and the label.
-    #
+    print(f"  Image shape: {image.shape}")
+    print(f"  Min pixel value: {image.min().item():.4f}")
+    print(f"  Max pixel value: {image.max().item():.4f}")
+    print(f"  Label: {label}")
+
     # Step 3: The pixel values are no longer in [0, 1]. Why?
     #         Write your answer as a comment.
     #         Hint: think about what Normalize() does.
